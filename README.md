@@ -1,108 +1,174 @@
+# 🌐 ChatGPT Clone
 
-# 🌐 ChatGPT Next.js App
+A modern ChatGPT clone built with **Next.js** and **TypeScript**, featuring an intuitive chat interface, image analysis capabilities, voice input, and message editing. The app uses OpenRouter API for chat and Gemini for image analysis, providing a comprehensive AI chat experience similar to ChatGPT.
 
-A chat application built with **Next.js** and **TypeScript**, featuring client-side state management and real-time chatbot responses using **OpenAI's GPT-4 model**. This modern, dynamic chat app offers seamless interaction with features such as auto-scroll, user-friendly input, and a responsive UI powered by **NextUI**.
+## ✨ Key Features
 
----
-
-## ✨ Features
-- 🔄 **Client-side rendering** for real-time UI updates.
-- 🚀 **Real-time bot responses** streamed to the client.
-- 📩 **User input** sent via POST to the backend API.
-- 🖱️ **Auto-scroll** to show the latest chat messages.
-- 🛠️ **Modern UI** built with **NextUI** components.
-- 🔧 **Data fetching** managed by **@tanstack/react-query**.
+- 🤖 **Advanced AI Chat**: Powered by OpenRouter API for natural conversations
+- �️ **Image Analysis**: Upload and analyze images using Google's Gemini model
+- 🎤 **Voice Input**: Built-in speech-to-text for hands-free chatting
+- ✏️ **Message Editing**: Edit sent messages with context-aware AI responses
+- � **Chat Persistence**: Local storage for chat history
+- 🎨 **ChatGPT-like UI**: Dark theme with modern, responsive design
+- � **Responsive Layout**: Works seamlessly on desktop and mobile
 
 ---
 
 ## 🚀 Getting Started
 
-### 1. Clone the repository
+### Prerequisites
+
+- Node.js 20 or later
+- npm/yarn
+- OpenRouter API key
+- Cloudinary account
+
+### Environment Setup
+
+Create a `.env.local` file in the root directory:
+
 ```bash
-git clone https://github.com/misterhamu/clone-chat-gpt
+OPENROUTER_API_KEY=your_openrouter_api_key
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
 ```
 
-### 2. Install dependencies
+### Installation Steps
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/ghoshvidip26/clone-chat-gpt.git
+cd clone-chat-gpt
+```
+
+2. Install dependencies:
+
 ```bash
 npm install
 ```
 
-### 3. Set up environment variables
-Create a `.env.local` file in the root directory and add your OpenAI API key:
-```bash
-OPENAI_API_KEY=your-openai-api-key
-```
+3. Start the development server:
 
-### 4. Start the development server
 ```bash
 npm run dev
 ```
 
+4. Open [http://localhost:3000](http://localhost:3000) in your browser
+
 ---
 
-## 📡 API Routes
+## �️ Technical Details
 
-### `/api/chat`
+### API Routes
+
+#### `/api/chat`
+
 - **Method**: `POST`
-- **Description**: Sends a user's message to OpenAI GPT-4 and streams the response back.
-- **Request Body**:
-  ```json
-  {
-    "message": "Your message here"
-  }
-  ```
-- **Response**: Server-Sent Events (SSE) stream of the chatbot's response in chunks.
+- **Description**: Handles chat messages and image analysis
+- **Features**:
+  - Text chat using OpenRouter API
+  - Image analysis using Gemini model
+  - Context-aware responses
+  - Support for message history
+
+#### `/api/upload`
+
+- **Method**: `POST`
+- **Description**: Handles image uploads to Cloudinary
+- **Features**:
+  - Secure file upload
+  - Image optimization
+  - Multiple format support
 
 ---
 
-## 🌐 Understanding Server-Sent Events (SSE)
+## � Feature Details
 
-### What is SSE?
-**Server-Sent Events (SSE)** is a web technology that enables a server to push real-time updates to the client over an HTTP connection. It’s particularly useful for applications that require real-time data streaming, like our chat application.
+### 💬 Chat Interface
 
-### Why SSE for this project?
-In this project, SSE allows the server (which communicates with OpenAI’s GPT-4) to send partial or complete responses to the client as they are generated. This ensures that the user receives messages in real-time without waiting for the entire response to complete.
+- Real-time AI responses
+- Markdown support for rich text
+- Message timestamps
+- Loading indicators
+- Persistent chat history
+- Context-aware conversations
 
-### How SSE works in the chat app:
-1. **Client request:** When a user sends a message, a POST request is made to the `/api/chat` endpoint.
-2. **Server processing:** The server interacts with OpenAI’s API and starts streaming the response as it’s being generated.
-3. **Streaming:** The server sends the response in small chunks (in SSE format), which are received and processed by the client in real-time.
-4. **Real-time updates:** The chat interface displays the bot’s reply progressively, providing a seamless chat experience.
+### 📸 Image Analysis
 
-### SSE in the code:
-The API route for `/api/chat` uses a **ReadableStream** to stream the response back to the client. Here’s a simplified version of the server-side implementation:
-```ts
-const readableStream = new ReadableStream({
-  async start(controller) {
-    // OpenAI API call and streaming response
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4",
-      messages: [{ role: "user", content: message }],
-      stream: true,
-    });
+- Drag & drop upload
+- Preview functionality
+- AI-powered image analysis
+- Multiple format support
+- Cloudinary integration
 
-    // Stream response chunks back to the client
-    for await (const chunk of completion) {
-      const content = chunk.choices[0].delta?.content || "";
-      controller.enqueue(encoder.encode(`data: ${content}
+### 🎤 Voice Input
 
-`));
-      
-      // Close stream when complete
-      if (chunk.choices[0].finish_reason === "stop") {
-        controller.close();
-        break;
-      }
-    }
-  }
-});
+- Real-time speech-to-text
+- Microphone status indicator
+- Voice input toggle
+- Seamless integration with chat
+
+### ✏️ Message Editing
+
+- Edit sent messages
+- Real-time preview
+- Context preservation
+- Edit history tracking
+- Automatic AI response updates
+
+### 🎨 UI/UX Features
+
+- ChatGPT-like dark theme
+- Smooth animations
+- Responsive design
+- Keyboard shortcuts
+- Visual feedback
+
+## 📁 Project Structure
+
+```
+src/
+  ├── app/
+  │   ├── api/
+  │   │   ├── chat/     # Chat endpoints
+  │   │   └── upload/   # Image upload
+  │   ├── components/
+  │   │   ├── BotMessage.tsx
+  │   │   ├── UserMessage.tsx
+  │   │   ├── Upload.tsx
+  │   │   └── Microphone.tsx
+  │   ├── utils/        # Utility functions
+  │   ├── layout.tsx
+  │   └── page.tsx
 ```
 
+## 🤝 Contributing
+
+Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.
+
+## 📝 License
+
+[MIT](https://choosealicense.com/licenses/mit/)
+
+## 🙏 Credits
+
+- UI/UX inspired by OpenAI's ChatGPT
+- Icons from react-icons
+- AI powered by OpenRouter API and Google Gemini
+
+## 👨‍💻 Author
+
+Vidip Ghosh
+
+- GitHub: [@ghoshvidip26](https://github.com/ghoshvidip26)
 - **ReadableStream:** This creates a stream of data that is sent back to the client incrementally.
 - **Controller:** Manages the flow of the stream and pushes chunks of data (GPT-4 responses) as they're generated.
-- **Event format:** Each SSE message is prefixed with `data: ` followed by the message content.
+- **Event format:** Each SSE message is prefixed with `data:` followed by the message content.
 
 SSE is ideal for this use case as it provides:
+
 - Low latency for real-time updates.
 - Efficient one-way communication from the server to the client.
 - A persistent connection that keeps streaming until the server closes it.
@@ -120,7 +186,7 @@ SSE is ideal for this use case as it provides:
 
 ## 🛠️ Components Overview
 
-- **`Home.tsx`**: Main chat interface component. Manages user input, chat history, and message sending.
+- **`page.tsx`**: Main chat interface component. Manages user input, chat history, and message sending.
 - **API Route**: Handles communication with GPT-4 API, streams responses back to the client.
 
 ---
@@ -130,9 +196,6 @@ SSE is ideal for this use case as it provides:
 - **Next.js**: React framework for server-side rendering and static site generation.
 - **TypeScript**: Adds type safety to JavaScript for more robust code.
 - **NextUI**: Modern component library for responsive design.
-- **@tanstack/react-query**: Simplifies server-side state management.
-
----
 
 ## 📄 License
 
